@@ -1,0 +1,7 @@
+# Prior Authorization Review Skill Dependencies
+
+# No Python dependencies required for basic operation
+# Future enhancements may require:
+# - pandas (for analytics)
+# - requests (for API calls)
+# - python-docx (for document generation)
