@@ -1,0 +1,46 @@
+{
+  "name": "healthcare",
+  "owner": {
+    "name": "Anthropic",
+    "email": "support@anthropic.com"
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "description": "Skills for healthcare workflows including clinical trials, prior authorization, and FHIR API development"
+  },
+  "plugins": [
+    {
+      "name": "clinical-trial-protocol",
+      "source": "./",
+      "description": "Generate FDA/NIH-compliant clinical trial protocols for medical devices or drugs",
+      "category": "healthcare",
+      "tags": ["clinical-trials", "fda", "protocol", "regulatory"],
+      "strict": false,
+      "skills": [
+        "./clinical-trial-protocol-skill"
+      ]
+    },
+    {
+      "name": "prior-auth-review",
+      "source": "./",
+      "description": "Automate payer review of prior authorization requests with clinical documentation synthesis",
+      "category": "healthcare",
+      "tags": ["prior-auth", "insurance", "medical-necessity", "cms"],
+      "strict": false,
+      "skills": [
+        "./prior-auth-skill"
+      ]
+    },
+    {
+      "name": "fhir-developer",
+      "source": "./",
+      "description": "FHIR API development guide for building healthcare endpoints with R4 resources and SMART authorization",
+      "category": "healthcare",
+      "tags": ["fhir", "hl7", "api", "interoperability", "smart-on-fhir"],
+      "strict": false,
+      "skills": [
+        "./fhir-developer-skill"
+      ]
+    }
+  ]
+}
