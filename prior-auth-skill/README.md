@@ -113,9 +113,9 @@ Use the prior-auth-review-skill
    - Assesses medical necessity
    - Generates recommendation
 
-5. **Review and proceed to Subskill 2:**
-   - Review assessment summary
-   - Confirm to proceed to decision subskill
+5. **Review assessment and confirm decision:**
+   - Review AI-generated recommendation with rationale
+   - Accept, reject, or override the recommendation
 
 6. **Receive final payer decision:**
    - APPROVED: Authorization number, validity dates, provider letter

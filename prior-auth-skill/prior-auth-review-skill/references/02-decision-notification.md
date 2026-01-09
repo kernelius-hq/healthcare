@@ -61,7 +61,7 @@ Display assessment summary with:
 - Documentation gaps count
 - Rationale
 
-Ask: "Accept recommendation? (Yes/No/Override)"
+Ask: "Accept this recommendation as the final decision? (Yes/No/Override)"
 
 - **Yes:** Proceed with recommendation
 - **No:** Exit, return to menu
