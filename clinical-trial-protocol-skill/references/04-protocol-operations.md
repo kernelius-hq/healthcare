@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This subskill generates the operational, assessment, and statistical sections (8-11) of a comprehensive, FDA/NIH-compliant clinical study protocol. It adds efficacy and safety assessments, adverse event reporting, statistical analysis plan with sample size calculation, regulatory/operational considerations, and references to complete the protocol.
+This subskill generates the operational, assessment, and statistical sections (8-11) of a clinical study protocol. It adds efficacy and safety assessments, adverse event reporting, statistical analysis plan with sample size calculation, regulatory/operational considerations, and references to complete the protocol.
 
 ## Prerequisites
 
@@ -218,7 +218,7 @@ If script fails:
 
 1. Read `waypoints/intervention_metadata.json` to get the `protocol_template` and `template_source` field values
 2. **Read the protocol template file:**
-   - The path is stored in `protocol_template` field (could be `template/[name].md` OR a user-provided path)
+   - The path is stored in `protocol_template` field (could be `assets/[name].md` OR a user-provided path)
    - Read the file at that path (focus on Sections 8-11)
    - Note: The `template_source` field indicates whether this is `"directory"` or `"user_provided"` (for logging/debugging only)
 3. Read `waypoints/02_protocol_foundation.md` and `waypoints/03_protocol_intervention.md` to understand existing context (especially study design, endpoints, population, and Schedule of Activities)
@@ -1819,7 +1819,7 @@ Next Steps:
 ## Output Files
 
 **Created:**
-- `waypoints/04_protocol_operations.md` (Sections 8-11 only, ~2,000 lines)
+- `waypoints/04_protocol_operations.md` (Sections 8-11)
 - `waypoints/02_sample_size_calculation.json` (sample size calculation results)
 
 **Updated:**
@@ -1879,14 +1879,9 @@ Before finalizing, verify:
 - [ ] Protocol metadata updated correctly
 - [ ] Intervention metadata updated correctly
 - [ ] COMPLETE protocol now contains all 11 sections
-- [ ] Total protocol length: ~5,000 lines (appropriate for complexity)
 
 ## Notes
 
-- This subskill generates approximately 2,000-4,500 lines of protocol content
-- Simple studies: ~2,000 lines
-- Moderate complexity: ~3,000 lines
-- Complex studies with extensive assessments and statistics: ~4,000-4,500 lines
 - **Sample size calculation is interactive** - requires user input
 - Output stays within token limits by focusing on Sections 8-11 only
 - **This phase generates the final sections** - all 11 sections now generated but not yet concatenated
