@@ -132,6 +132,48 @@ Exit skill.
 
 ---
 
+### Startup: Request Input Files
+
+**Prompt the user to provide input files or use sample data.**
+
+Display the following prompt:
+
+```
+Prior Authorization Review requires the following input files:
+
+REQUIRED FILES:
+1. Prior Authorization Request Form (PDF) - Contains member info, requested service, provider details
+2. Clinical Notes / H&P (PDF) - History and physical examination documentation
+3. Diagnostic Imaging Reports (PDF) - CT, MRI, X-ray, or other imaging results
+4. Laboratory Results (PDF) - Relevant lab work supporting medical necessity
+5. Additional Supporting Documentation (PDF, optional) - PFTs, specialist consults, etc.
+
+OPTIONS:
+(A) Upload your own files - Provide paths to each required document
+(B) Use sample files - Load pre-configured sample case (CT-guided lung biopsy)
+
+Enter your choice (A/B): ___
+```
+
+**If user selects (A) - Upload own files:**
+- Prompt for path to each required file
+- Validate files exist and are readable
+- Store file paths for use in Subskill 1
+- Set `using_sample_files = False`
+
+**If user selects (B) - Use sample files:**
+- Load sample files from `assets/sample/`:
+  - `01_Prior_Auth_Request_Form.pdf`
+  - `02_Clinical_Notes_H_and_P.pdf`
+  - `03_CT_Chest_Report.pdf`
+  - `04_Laboratory_Results.pdf`
+  - `05_Pulmonary_Function_Tests.pdf`
+- Display: "Loading sample case: CT-guided transbronchial lung biopsy for 1.2cm RUL nodule"
+- Set `using_sample_files = True`
+- **Demo mode note:** When sample files are used, the sample data contains demo NPI (`1234567890`) and sample member ID (`1EG4-TE5-MK72`). This combination triggers demo mode, which skips the NPI MCP lookup for this specific provider only. All other MCP calls (ICD-10 validation, CMS Coverage policy search) execute normally.
+
+---
+
 ### Startup: Check for Existing Request
 
 **Check if `waypoints/assessment.json` exists:**

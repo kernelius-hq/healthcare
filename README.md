@@ -1,62 +1,95 @@
-# Healthcare Marketplace for Claude Code
+# Healthcare Best Practices
 
-Skills for healthcare workflows including clinical trials, prior authorization review, and FHIR API development.
-
-## Quick Start
-
-```bash
-# Add the marketplace
-/plugin marketplace add anthropics/healthcare
-
-# Install skills
-/plugin install fhir-developer@healthcare
-/plugin install prior-auth@healthcare
-/plugin install clinical-trial-protocol@healthcare
-```
-
-## Available Skills
-
-### FHIR Developer
-**Plugin ID**: `fhir-developer@healthcare`
-
-Connect healthcare systems faster with specialized knowledge of HL7 FHIR R4 for healthcare data exchange, including resource structures, coding systems (LOINC, SNOMED CT, RxNorm), and validation patterns.
-
-**Requirements**: None
+Repo for the Claude Code Marketplace to use with the Claude for Healthcare Launch. This will continue to host the marketplace.json long-term, but not the actual MCP servers.
 
 ---
 
-### Prior Authorization Review (Demo)
-**Plugin ID**: `prior-auth@healthcare`
+## Prior Authorization Review Skill
 
-Demo skill that digests prior auth request documentation, performs initial checks (NPI, ICD-10, CMS Coverage, CPT), and summarizes the argument for medical necessity. Customize for your own use cases.
+Automate payer review of prior authorization requests using AI-powered clinical reasoning and coverage policy matching to aid the payer's determination and workflow.
 
-**Requirements**: None
+### Overview
+
+This Claude Code skill helps automate the health insurance payer professional's prior authorization (PA) review process. It processes incoming PA requests from healthcare providers, validates medical necessity against coverage policies, and generates proposed authorization decisions with complete documentation for the professional's review and sign-off.
+
+**Target Users:** Health insurance payer organizations (Medicare Advantage, Commercial, Medicaid MCOs)
+
+**Value Proposition:**
+
+- Consistent, auditable decision-making
+- Structured documentation for review processes
+- Free clinical reviewers to focus on complex cases
+
+### Important Disclaimers
+
+> **DRAFT RECOMMENDATIONS ONLY:** This skill generates draft recommendations only. The payer organization remains fully responsible for all final authorization decisions.
+>
+> **HUMAN REVIEW REQUIRED:** All AI-generated recommendations require review and confirmation by appropriate professionals before becoming final decisions. Users may accept, reject, or override any recommendation with documented justification.
+>
+> **AI DECISION BEHAVIOR:** In default mode, AI recommends APPROVE or PEND only - never recommends DENY. Decision logic is configurable in the skill's rubric.md file.
+>
+> **COVERAGE POLICY LIMITATIONS:** Coverage policies are sourced from Medicare LCDs/NCDs via CMS Coverage MCP Connector. If this review is for a commercial or Medicare Advantage plan, payer-specific policies may differ and were not applied.
+
+### Subskill 1: Intake & Assessment
+
+**Purpose:** Collect prior authorization request information, validate credentials and codes, extract clinical data, identify applicable coverage policies, assess medical necessity, and generate approval recommendation.
+
+**What it does:**
+
+- Collects PA request details (member, service, provider, clinical documentation)
+- Validates provider credentials via NPI MCP Connector
+- Validates ICD-10 codes via ICD-10 MCP Connector (batch validation)
+- Validates CPT/HCPCS codes via WebFetch to CMS Fee Schedule
+- Searches coverage policies via CMS Coverage MCP Connector
+- Extracts structured clinical data from documentation
+- Maps clinical evidence to policy criteria
+- Performs medical necessity assessment
+- Generates recommendation (APPROVE/PEND)
+
+**Output:** `waypoints/assessment.json` - Consolidated assessment with recommendation
+
+**Human Decision Point:** After assessment is generated, the professional reviews the AI recommendation and supporting evidence before proceeding to the decision phase.
+
+### Subskill 2: Decision & Notification
+
+**Purpose:** Finalize authorization decision with human oversight and generate provider notification.
+
+**What it does:**
+
+- Loads assessment from Subskill 1
+- Presents recommendation for human review
+- Human actively confirms, rejects, or overrides the recommendation
+- Generates authorization number (if approved) or documentation requests (if pended)
+- Creates provider notification letter
+- Documents complete audit trail
+
+**Output:**
+
+- `waypoints/decision.json` - Final decision record
+- `outputs/notification_letter.txt` - Provider notification
+
+**Human Decision Point:** The professional must explicitly confirm, reject, or override the AI recommendation. No decision is finalized without human action.
+
+### Installation
+
+See [prior-auth-review-skill/SKILL.md](prior-auth-review-skill/SKILL.md) for complete installation and usage instructions.
+
+### Sample Data
+
+Sample case files are included in `prior-auth-review-skill/assets/sample/` for demonstration purposes. When using sample files, the skill operates in demo mode which:
+
+- Skips NPI MCP lookup for the sample provider only
+- Executes all other MCP calls (ICD-10, CMS Coverage) normally
+- Demonstrates the complete workflow with a pre-configured lung biopsy case
 
 ---
 
-### Clinical Trial Protocol Generator
-**Plugin ID**: `clinical-trial-protocol@healthcare`
+## Clinical Trial Protocol Skill
 
-Generate FDA/NIH-compliant clinical trial protocols for medical devices or drugs using a waypoint-based architecture.
+See [clinical-trial-protocol-skill/README.md](clinical-trial-protocol-skill/README.md) for details.
 
-**Requirements**: Python with scipy and numpy
-
-## Remote MCP Servers
-
-| MCP Name | Description | URL |
-|----------|-------------|-----|
-| CMS Coverage | Access the CMS Coverage Database | https://mcp.deepsense.ai/cms_coverage/mcp |
-| NPI Registry | Access US National Provider Identifier (NPI) Registry | https://mcp.deepsense.ai/npi_registry/mcp |
-| PubMed | Search biomedical literature from PubMed | https://pubmed.mcp.claude.com/mcp |
-
-Install MCP plugins:
-
-```bash
-claude mcp add-from-marketplace anthropics/healthcare/cms-coverage
-claude mcp add-from-marketplace anthropics/healthcare/npi-registry
-claude mcp add-from-marketplace anthropics/healthcare/pubmed
-```
+---
 
 ## License
 
-Skills are provided under Anthropic's terms of service.
+See LICENSE file for details.
