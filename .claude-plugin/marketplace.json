@@ -41,6 +41,27 @@
       "skills": [
         "./fhir-developer-skill"
       ]
+    },
+    {
+      "name": "cms-coverage",
+      "source": "./cms-coverage",
+      "description": "Access the CMS Coverage Database",
+      "category": "healthcare",
+      "tags": ["medicare", "coverage", "cms", "policy", "ncd", "lcd"]
+    },
+    {
+      "name": "npi-registry",
+      "source": "./npi-registry",
+      "description": "Access US National Provider Identifier (NPI) Registry",
+      "category": "healthcare",
+      "tags": ["npi", "provider", "registry", "hipaa"]
+    },
+    {
+      "name": "pubmed",
+      "source": "./pubmed",
+      "description": "Search biomedical literature from PubMed",
+      "category": "healthcare",
+      "tags": ["pubmed", "literature", "research", "medical", "pmc"]
     }
   ]
 }
