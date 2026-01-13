@@ -1,3 +1,5 @@
+# Claude Skill Review
+# Automatically reviews skill changes in PRs using the skill-creator skill
 name: Claude Skill Review
 
 on:
@@ -76,6 +78,23 @@ jobs:
           echo "$changed_files" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
+      - name: Get skill title
+        id: skill-title
+        run: |
+          # Extract title from SKILL.md frontmatter, fallback to directory name
+          title=$(sed -n '/^---$/,/^---$/p' "${{ matrix.skill }}/SKILL.md" | grep -E '^title:' | sed 's/^title:[[:space:]]*//' | tr -d '"'"'" || true)
+          echo "title=${title:-${{ matrix.skill }}}" >> $GITHUB_OUTPUT
+
+      - name: Check if skill is new
+        id: is-new
+        run: |
+          # Check if SKILL.md exists on the base branch
+          if git show "origin/${{ github.base_ref }}:${{ matrix.skill }}/SKILL.md" &>/dev/null; then
+            echo "is_new=false" >> $GITHUB_OUTPUT
+          else
+            echo "is_new=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Run Claude Skill Review
         uses: anthropics/claude-code-action@v1
         with:
@@ -93,13 +112,16 @@ jobs:
 
             First, read the skill and evaluate it against skill-creator best practices to build context. Consider frontmatter quality, conciseness, progressive disclosure, and resource organization.
 
-            Then focus on the specific changes in this PR. Evaluate whether the changes:
+            This is a ${{ steps.is-new.outputs.is_new == 'true' && 'NEW' || 'existing' }} skill. If new, provide a full review of the entire skill. If existing, focus on the specific changes in this PR.
+
+            Evaluate whether the changes:
             - Follow skill-creator guidelines
             - Are appropriate additions/modifications
             - Have any issues that should be addressed
 
-            Post ONLY the PR-specific feedback as a comment (not the full skill review). Keep it concise and actionable. Prioritize feedback by importance - list blocking issues first, then suggestions.
+            Post your feedback as a comment. Keep it concise and actionable. Prioritize feedback by importance - list blocking issues first, then suggestions.
 
-            gh pr comment ${{ github.event.pull_request.number }} --body "## Skill Review: ${{ matrix.skill }}
+            gh pr comment ${{ github.event.pull_request.number }} --body "## Skill Review: ${{ steps.skill-title.outputs.title }}
+            _(${{ matrix.skill }})_
 
             YOUR_PR_SPECIFIC_FEEDBACK_HERE"
