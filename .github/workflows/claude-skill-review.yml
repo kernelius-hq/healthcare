@@ -91,13 +91,15 @@ jobs:
             Changed files in this skill:
             ${{ steps.skill-files.outputs.files }}
 
-            Use the skill-creator guidelines you just loaded to evaluate this skill.
+            First, read the skill and evaluate it against skill-creator best practices to build context. Consider frontmatter quality, conciseness, progressive disclosure, and resource organization.
 
-            Structure your review in two sections:
+            Then focus on the specific changes in this PR. Evaluate whether the changes:
+            - Follow skill-creator guidelines
+            - Are appropriate additions/modifications
+            - Have any issues that should be addressed
 
-            **Skill Review**: Evaluate the skill as a whole against skill-creator best practices.
+            Post ONLY the PR-specific feedback as a comment (not the full skill review). Keep it concise and actionable.
 
-            **PR-Specific Feedback**: Call out any issues that are specifically introduced or addressed by the changes in this PR.
+            gh pr comment ${{ github.event.pull_request.number }} --body "## Skill Review: ${{ matrix.skill }}
 
-            When done, post your review as a PR comment using:
-            gh pr comment ${{ github.event.pull_request.number }} --body "YOUR_REVIEW_HERE"
+            YOUR_PR_SPECIFIC_FEEDBACK_HERE"
