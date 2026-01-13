@@ -83,12 +83,14 @@ jobs:
           plugin_marketplaces: 'https://github.com/anthropics/skills.git'
           plugins: 'example-skills@anthropic-agent-skills'
           prompt: |
+            /skill-creator
+
             Review the changes to the **${{ matrix.skill }}** skill in PR ${{ github.repository }}/pull/${{ github.event.pull_request.number }}.
 
             Changed files in this skill:
             ${{ steps.skill-files.outputs.files }}
 
-            Use the skill-creator skill guidelines to evaluate this skill.
+            Use the skill-creator guidelines you just loaded to evaluate this skill.
 
             Structure your review in two sections:
 
