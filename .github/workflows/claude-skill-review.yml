@@ -88,10 +88,10 @@ jobs:
             Changed files in this skill:
             ${{ steps.skill-files.outputs.files }}
 
-            Use the skill-creator skill guidelines to evaluate these changes.
+            Use the skill-creator skill guidelines to evaluate this skill.
 
             Structure your review in two sections:
 
-            **Changes in this PR**: Feedback on the specific changes in this PR. This is the primary focus.
+            **Skill Review**: Evaluate the skill as a whole against skill-creator best practices.
 
-            **Pre-existing issues** (optional): If you notice issues with the skill that existed before this PR, briefly note them here. Keep this section short - the author isn't responsible for fixing everything.
+            **PR-Specific Feedback**: Call out any issues that are specifically introduced or addressed by the changes in this PR.
