@@ -1,0 +1,97 @@
+name: Claude Skill Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, reopened]
+
+jobs:
+  detect-skills:
+    runs-on: ubuntu-latest
+    outputs:
+      skills: ${{ steps.detect.outputs.skills }}
+      has_skills: ${{ steps.detect.outputs.has_skills }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect skill changes
+        id: detect
+        run: |
+          # Get changed files in this PR
+          changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+
+          # Find all skill directories (directories containing SKILL.md)
+          skill_dirs=$(find . -name "SKILL.md" -type f | xargs -I {} dirname {} | sed 's|^\./||')
+
+          # Find which skills have changes
+          affected_skills=()
+          for skill_dir in $skill_dirs; do
+            for file in $changed_files; do
+              if [[ "$file" == "$skill_dir"* ]]; then
+                affected_skills+=("$skill_dir")
+                break
+              fi
+            done
+          done
+
+          # Remove duplicates and convert to JSON array
+          if [ ${#affected_skills[@]} -gt 0 ]; then
+            unique_skills=$(printf '%s\n' "${affected_skills[@]}" | sort -u | jq -R -s -c 'split("\n") | map(select(length > 0))')
+            echo "skills=$unique_skills" >> $GITHUB_OUTPUT
+            echo "has_skills=true" >> $GITHUB_OUTPUT
+            echo "Affected skills: $unique_skills"
+          else
+            echo "skills=[]" >> $GITHUB_OUTPUT
+            echo "has_skills=false" >> $GITHUB_OUTPUT
+            echo "No skill changes detected"
+          fi
+
+  review-skill:
+    needs: detect-skills
+    if: needs.detect-skills.outputs.has_skills == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        skill: ${{ fromJson(needs.detect-skills.outputs.skills) }}
+      fail-fast: false
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files for this skill
+        id: skill-files
+        run: |
+          changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep "^${{ matrix.skill }}" || true)
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          echo "$changed_files" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Run Claude Skill Review
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          plugin_marketplaces: 'https://github.com/anthropics/agent-skills.git'
+          plugins: 'skill-creator@anthropic-agent-skills'
+          prompt: |
+            Review the changes to the **${{ matrix.skill }}** skill in PR ${{ github.repository }}/pull/${{ github.event.pull_request.number }}.
+
+            Changed files in this skill:
+            ${{ steps.skill-files.outputs.files }}
+
+            Use the skill-creator skill guidelines to evaluate this skill.
+
+            Structure your review in two sections:
+
+            **Skill Review**: Evaluate the skill as a whole against skill-creator best practices.
+
+            **PR-Specific Feedback**: Call out any issues that are specifically introduced or addressed by the changes in this PR.
