@@ -88,15 +88,11 @@ jobs:
           plugins: 'example-skills@anthropic-agent-skills'
           claude_args: '--allowedTools "Bash(gh pr comment:*),Bash(git:*),Read,Glob,Grep"'
           prompt: |
-            /skill-creator
-
-            Review the changes to the **${{ matrix.skill }}** skill in PR #${{ github.event.pull_request.number }}.
+            Use the skill-creator skill to review the **${{ matrix.skill }}** skill in PR #${{ github.event.pull_request.number }}.
 
             Changed files in this skill:
             ${{ steps.skill-files.outputs.files }}
 
-            Use `git diff origin/${{ github.base_ref }}` to see what changed. Read the SKILL.md to get the skill title and understand the skill's purpose.
+            Use `git diff origin/${{ github.base_ref }}` to see what changed. If this is a new skill, provide a full review. If it's changes to an existing skill, focus on the changes.
 
-            If this is a new skill, provide a full review. If it's changes to an existing skill, focus on the specific changes. Evaluate against skill-creator best practices.
-
-            Post your feedback as a comment using `gh pr comment`. Use the skill title in the header. Keep feedback concise and actionable - blocking issues first, then suggestions.
+            Post your feedback as a comment using `gh pr comment`. Use the skill title in the header.
