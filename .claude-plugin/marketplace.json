@@ -21,14 +21,14 @@
       ]
     },
     {
-      "name": "prior-auth",
+      "name": "prior-auth-review",
       "source": "./",
       "description": "Automate payer review of prior authorization requests with clinical documentation synthesis",
       "category": "healthcare",
       "tags": ["prior-auth", "insurance", "medical-necessity", "cms"],
       "strict": false,
       "skills": [
-        "./prior-auth-skill"
+        "./prior-auth-review-skill"
       ]
     },
     {
