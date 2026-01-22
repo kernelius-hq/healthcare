@@ -6,7 +6,7 @@ Skills for healthcare workflows including clinical trials, prior authorization r
 
 ```bash
 # Add the marketplace
-/plugin marketplace add anthropics/healthcare
+/plugin marketplace add kernelius-hq/healthcare
 
 # Install skills
 /plugin install fhir-developer@healthcare
@@ -52,11 +52,11 @@ Generate FDA/NIH-compliant clinical trial protocols for medical devices or drugs
 Install MCP plugins:
 
 ```bash
-claude mcp add-from-marketplace anthropics/healthcare/cms-coverage
-claude mcp add-from-marketplace anthropics/healthcare/npi-registry
-claude mcp add-from-marketplace anthropics/healthcare/pubmed
+claude mcp add-from-marketplace kernelius-hq/healthcare/cms-coverage
+claude mcp add-from-marketplace kernelius-hq/healthcare/npi-registry
+claude mcp add-from-marketplace kernelius-hq/healthcare/pubmed
 ```
 
 ## License
 
-Skills are provided under Anthropic's terms of service.
+Skills are provided under Kernelius's terms of service.
